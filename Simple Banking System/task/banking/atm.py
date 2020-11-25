@@ -1,4 +1,4 @@
-from card_maker import generate_card, generate_pin
+from card_maker import make_luhn, generate_pin
 from card import Card
 
 
@@ -28,7 +28,7 @@ class ATM:
                 print("Command unknown")
 
     def create_card(self):
-        card_number = generate_card()
+        card_number = make_luhn()
         card_pin = generate_pin()
         card = Card(card_number, card_pin)
         self.cards.append(card)
