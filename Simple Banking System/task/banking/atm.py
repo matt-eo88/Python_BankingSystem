@@ -1,5 +1,6 @@
 from card_maker import make_luhn, generate_pin
 from card import Card
+from database_manager import DatabaseManager
 
 
 class ATM:
@@ -8,6 +9,7 @@ class ATM:
         self.is_on = True
         self.cards = []
         self.current_user = None
+        self.data_manager = DatabaseManager()
 
     def start_system(self):
 
@@ -32,6 +34,7 @@ class ATM:
         card_pin = generate_pin()
         card = Card(card_number, card_pin)
         self.cards.append(card)
+        self.data_manager.insert(card)
         print("Your card has been created")
         print("Your card number:")
         print(card.get_number())
@@ -43,19 +46,12 @@ class ATM:
         n = input()
         print("Enter your pin:")
         p = input()
-        if self.is_valid(n, p):
+        if self.data_manager.is_card(n, p):
             print("You have successfully logged in!")
+            self.current_user = self.data_manager.get_card(n, p)
             self.login_menu()
         else:
             print("Wrong card number or PIN!")
-
-    def is_valid(self, number, pin):
-        for card in self.cards:
-            if card.get_number() == number and card.get_pin() == pin:
-                self.current_user = card
-                return True
-            else:
-                return False
 
     def login_menu(self):
         off = False

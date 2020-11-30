@@ -43,6 +43,7 @@ def make_checksum(numbers):
     for n in numbers:
         x = int(n)
         sum_ += x
+    # return 10 - (sum_ % 10)
     checksum = 0
     for i in range(10):
         x = sum_ + i
