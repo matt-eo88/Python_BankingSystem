@@ -16,3 +16,9 @@ class Card:
 
     def set_balance(self, balance):
         self.balance = balance
+
+    def add_balance(self, balance):
+        self.balance += balance
+
+    def take_balance(self, balance):
+        self.balance -= balance

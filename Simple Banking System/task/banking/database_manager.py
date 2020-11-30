@@ -18,7 +18,7 @@ class DatabaseManager:
         balance INTEGER DEFAULT 0)""")
         self.conn.commit()
 
-    def insert(self, card):  # change parameters
+    def insert(self, card):
         number = card.get_number()
         pin = card.get_pin()
         balance = card.get_balance()
@@ -50,3 +50,43 @@ class DatabaseManager:
         card = Card(result[0], result[1])
         card.set_balance(result[2])
         return card
+
+    def add_income(self, number, income):
+        query = """
+        UPDATE card SET balance = balance + {}
+        WHERE number = {}""".format(income, number)
+        self.cur.execute(query)
+        self.conn.commit()
+
+    def delete_account(self, card):
+        n = card.get_number()
+        p = card.get_pin()
+        query = """
+        DELETE FROM card WHERE number = {}
+        AND pin = {}""".format(n, p)
+        self.cur.execute(query)
+        self.conn.commit()
+
+    def exists(self, number):
+        query = """
+                SELECT number FROM card
+                WHERE number = {}""".format(number)
+        self.cur.execute(query)
+        self.conn.commit()
+        result = self.cur.fetchone()
+        if result is None:
+            return False
+        return True
+
+    def transfer(self, amount, recipient, sender):
+        sender_num = sender.get_number()
+        query = """
+        UPDATE card SET balance = balance - {}
+        WHERE number = {}""".format(amount, sender_num)
+        query2 = """
+        UPDATE card SET balance = balance + {}
+        WHERE number = {}""".format(amount, recipient)
+        self.cur.execute(query)
+        self.conn.commit()
+        self.cur.execute(query2)
+        self.conn.commit()

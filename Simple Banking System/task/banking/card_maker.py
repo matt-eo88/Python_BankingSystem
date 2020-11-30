@@ -52,3 +52,23 @@ def make_checksum(numbers):
             break
 
     return checksum
+
+
+# Checks if the given card number
+# passes the Luhn algorithm
+def is_luhn(number):
+    numbers = list(number)
+    last = int(numbers.pop())
+    counter = 1
+    for index, char in enumerate(numbers):
+        n = int(char)
+        if counter % 2 != 0:
+            n *= 2
+        if n > 9:
+            n -= 9
+        numbers[index] = n
+        counter += 1
+    sum_ = 0
+    for n in numbers:
+        sum_ += n
+    return (sum_ + last) % 10 == 0
